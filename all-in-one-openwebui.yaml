@@ -1,0 +1,57 @@
+#apiVersion: v1
+#kind: Namespace
+#metadata:
+#  name: ollama
+
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: webui
+  namespace: ollama
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      name: webui
+  template:
+    metadata:
+      labels:
+        name: webui
+    spec:
+      volumes:
+      - hostPath:
+          path: /opt/webui
+          type: DirectoryOrCreate
+        name: webui-storage
+      containers:
+        - name: webui
+          image: dyrnq/open-webui:latest
+          imagePullPolicy: IfNotPresent
+          volumeMounts:
+          - mountPath: /app/backend/data
+            name: webui-storage
+          env:
+            - name: OLLAMA_BASE_URLS
+              value: "http://ollama.ollama.svc.cluster.local:11434"
+          ports:
+            - name: http
+              containerPort: 8080
+              protocol: TCP
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: webui
+  namespace: ollama
+spec:
+  type: ClusterIP
+  selector:
+    name: webui
+  ports:
+  - port: 8080
+    name: http
+    targetPort: 8080
+    protocol: TCP

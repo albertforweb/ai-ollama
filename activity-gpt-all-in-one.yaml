@@ -1,0 +1,55 @@
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: activity-gpt
+  name: activity-gpt
+  namespace: default
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: activity-gpt
+  strategy:
+    rollingUpdate:
+      maxSurge: 25%
+      maxUnavailable: 25%
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: activity-gpt
+    spec:
+      containers:
+      - name: activity-gpt
+        image: localhost:5000/activity-gpt:0.0.2
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 5001
+          name: http
+          protocol: TCP
+      dnsPolicy: ClusterFirst
+      restartPolicy: Always
+      schedulerName: default-scheduler
+
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: activity-gpt
+  namespace: default
+spec:
+  ports:
+  - name: http
+    port: 5001
+    protocol: TCP
+    targetPort: 5001
+  selector:
+    app: activity-gpt
+  type: ClusterIP
+
+---
