@@ -1,0 +1,59 @@
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: mockbin
+  name: mockbin
+  namespace: default
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mockbin
+  strategy:
+    rollingUpdate:
+      maxSurge: 25%
+      maxUnavailable: 25%
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: mockbin
+    spec:
+      containers:
+      - name: mockbin
+        env:
+          - name: MOCKBIN_PORT
+            value: "8000"
+        image: dockette/mockbin
+        #image: ghcr.io/kong/insomnia-mockbin:latest
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 8000
+          name: http
+          protocol: TCP
+      dnsPolicy: ClusterFirst
+      restartPolicy: Always
+      schedulerName: default-scheduler
+
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: mockbin
+  namespace: default
+spec:
+  ports:
+  - name: http
+    port: 8000
+    protocol: TCP
+    targetPort: 8000
+  selector:
+    app: mockbin
+  type: ClusterIP
+
+---

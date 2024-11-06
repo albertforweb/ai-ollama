@@ -1,0 +1,18 @@
+
+apiVersion: configuration.konghq.com/v1
+kind: KongClusterPlugin
+metadata:
+  name: global-http-log
+  annotations:
+    kubernetes.io/ingress.class: kong
+  labels:
+    global: "true"
+config:
+  http_endpoint: http://10.152.183.174:8000/bin/:id
+  #http_endpoint: http://mockbin.org/bin/:id
+  method: POST
+  timeout: 1000
+  keepalive: 1000
+  flush_timeout: 2
+  retry_count: 2
+plugin: http-log

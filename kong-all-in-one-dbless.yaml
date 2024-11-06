@@ -2037,7 +2037,7 @@ spec:
     protocol: TCP
     targetPort: 8444
   selector:
-    app: proxy-kong
+    app: kong-proxy
 ---
 apiVersion: v1
 kind: Service
@@ -2058,7 +2058,7 @@ spec:
     protocol: TCP
     targetPort: 8443
   selector:
-    app: proxy-kong
+    app: kong-proxy
   type: LoadBalancer
 ---
 apiVersion: v1
@@ -2073,20 +2073,20 @@ spec:
     protocol: TCP
     targetPort: 8080
   selector:
-    app: ingress-kong
+    app: kong-ingress
 ---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
   labels:
-    app: ingress-kong
-  name: ingress-kong
+    app: kong-ingress
+  name: kong-ingress
   namespace: kong
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: ingress-kong
+      app: kong-ingress
   template:
     metadata:
       annotations:
@@ -2094,7 +2094,7 @@ spec:
         kuma.io/service-account-token-volume: kong-serviceaccount-token
         traffic.sidecar.istio.io/includeInboundPorts: ""
       labels:
-        app: ingress-kong
+        app: kong-ingress
     spec:
       automountServiceAccountToken: false
       containers:
@@ -2173,14 +2173,14 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   labels:
-    app: proxy-kong
-  name: proxy-kong
+    app: kong-proxy
+  name: kong-proxy
   namespace: kong
 spec:
-  replicas: 2
+  replicas: 1
   selector:
     matchLabels:
-      app: proxy-kong
+      app: kong-proxy
   template:
     metadata:
       annotations:
@@ -2188,7 +2188,7 @@ spec:
         kuma.io/service-account-token-volume: kong-serviceaccount-token
         traffic.sidecar.istio.io/includeInboundPorts: ""
       labels:
-        app: proxy-kong
+        app: kong-proxy
     spec:
       automountServiceAccountToken: false
       containers:
@@ -2216,6 +2216,8 @@ spec:
           value: /dev/stderr
         - name: KONG_ROUTER_FLAVOR
           value: traditional
+        - name: KONG_PLUGINS
+          value: "bundled,http-log"
         image: kong:3.4
         lifecycle:
           preStop:
