@@ -1,0 +1,36 @@
+To get started with Qdrant using Docker, follow these steps:
+1. Pull the Image:
+Code
+
+docker pull qdrant/qdrant
+
+2. Run the Container:
+Code
+
+docker run -p 6333:6333 -p 6334:6334 \
+  -v $(pwd)/qdrant_storage:/qdrant/storage:z \
+  qdrant/qdrant 
+Explanation:
+-p 6333:6333: Maps the container's gRPC port (6333) to the host's port 6333.
+-p 6334:6334: Maps the container's HTTP port (6334) to the host's port 6334.
+-v $(pwd)/qdrant_storage:/qdrant/storage:z: Mounts the current directory's qdrant_storage folder to the container's /qdrant/storage directory. This allows you to persist data outside of the container.
+3. Access Qdrant:
+You can now access Qdrant at http://localhost:6334 or using the Python client:
+Python
+
+
+from qdrant_client import QdrantClient
+client = QdrantClient(host="localhost", port=6333)
+Custom Configuration:
+If you need to customize the Qdrant configuration, you can create a config.yaml file and mount it to the container:
+Code
+
+docker run -p 6333:6333 -p 6334:6334 \
+  -v $(pwd)/qdrant_storage:/qdrant/storage:z \
+  -v $(pwd)/config.yaml:/qdrant/config/production.yaml \
+  qdrant/qdrant
+For more information, refer to the official documentation: https://qdrant.tech/documentation/quickstart/
+
+
+//// helm chart 
+https://qdrant.to/helm

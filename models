@@ -1,0 +1,59 @@
+{
+  "data": [
+    {
+      "id": "dragonfly/microsoft.phi-3.5-mini-instruct",
+      "object": "model",
+      "created": 1677610602,
+      "owned_by": "openai"
+    },
+    {
+      "id": "bge-small-en-v1.5",
+      "object": "model",
+      "created": 1677610602,
+      "owned_by": "openai"
+    },
+    {
+      "id": "all-MiniLM-L6-v2",
+      "object": "model",
+      "created": 1677610602,
+      "owned_by": "openai"
+    },
+    {
+      "id": "bedrock/llama3-70B",
+      "object": "model",
+      "created": 1677610602,
+      "owned_by": "openai"
+    },
+    {
+      "id": "bedrock/llama3-8B",
+      "object": "model",
+      "created": 1677610602,
+      "owned_by": "openai"
+    },
+    {
+      "id": "mxbai-embed-large-v1",
+      "object": "model",
+      "created": 1677610602,
+      "owned_by": "openai"
+    },
+    {
+      "id": "bedrock/llama3.2-3B",
+      "object": "model",
+      "created": 1677610602,
+      "owned_by": "openai"
+    },
+    {
+      "id": "bedrock/llama3.2-1B",
+      "object": "model",
+      "created": 1677610602,
+      "owned_by": "openai"
+    },
+    {
+      "id": "bedrock/llama3-405B",
+      "object": "model",
+      "created": 1677610602,
+      "owned_by": "openai"
+    }
+  ],
+  "object": "list"
+}

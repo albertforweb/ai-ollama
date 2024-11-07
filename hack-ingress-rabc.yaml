@@ -1,0 +1,65 @@
+
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: hack-ingress
+  labels:
+    app: hack-ingress
+spec:
+  ingressClassName: "kong"
+  rules:
+    - http:
+        paths:
+          - path: "/api/v1/activitygpt/"
+            pathType: "Prefix"
+            backend:
+              service:
+                name: "activity-gpt"
+                port:
+                  number: 5001
+ 
+
+---
+
+
+apiVersion: maglev.system.io/v1beta1
+kind: RBAC
+metadata:
+  finalizers:
+  - rbac.maglev-controller.finalizer.maglev.system.io
+  name: hack-rbacs
+  namespace: hack
+spec:
+  op_mappers:
+  - frontendPath: /api/v1/activitygpt/
+    resource: hack.default.resource
+  permissions:
+  - operationNameSet:
+    - gRead
+    permissionGroupNameList:
+    - OBSERVER-PERMISSION-GROUP
+    - NETWORK-ADMIN-PERMISSION-GROUP
+    permissionName: Read Resource of hack
+    resourceName: hack.default.resource
+  - operationNameSet:
+    - gCreate
+    - gRead
+    - gUpdate
+    - gRemove
+    permissionGroupNameList:
+    - SUPER-ADMIN-PERMISSION-GROUP
+    permissionName: Manage Resource of hack
+    resourceName: hack.default.resource
+  resources:
+  - label: hack
+    name: hack.default.resource
+    operations:
+    - label: Default Read Operation for hack.default.resource
+      name: gRead
+    - label: Default Modify Operation for hack.default.resource
+      name: gUpdate
+    - label: Default Delete Operation for hack.default.resource
+      name: gRemove
+    - label: Default Create Operation for hack.default.resource
+      name: gCreate
+    type: System.System Management
