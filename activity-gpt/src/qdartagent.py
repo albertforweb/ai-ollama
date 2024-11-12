@@ -1,7 +1,6 @@
+import logging
 import queue 
 from qdrant_client import QdrantClient
-
-
 
 # import numpy as np
 from qdrant_client.models import PointStruct
@@ -14,27 +13,29 @@ class QdrantAgent:
         self.client = QdrantClient(config['qdrant_url'])
 
     def create_collection(self):
+      if self.client.collection_exists(self.collection):
+        self.client.delete_collection(self.collection)
+    
       if not self.client.collection_exists(self.collection):
         self.client.create_collection(
             collection_name=self.collection,
-            vectors_config=VectorParams(size=100, distance=Distance.COSINE),
+            vectors_config=VectorParams(size=1536, distance=Distance.COSINE),
         )
         
 
-    def store(self, data: dict, vectors: list):
-      # vectors = np.random.rand(100, 100)
-      self.client.upsert(
-        collection_name=self.collection,
-        points=[
-            PointStruct(
-                  id=idx,
-                  vector=vector.tolist(),
-                  payload=data
-                  # payload={"color": "red", "rand_number": idx % 10}
-            )
-            for idx, vector in enumerate(vectors)
-        ]
+    def store(self, data, embedding):
+      id = embedding["data"][0]["index"],
+      vector = embedding["data"][0]["embedding"],
+      points = PointStruct(
+        id = id,
+        vector = vector,
+        payload = data
       )
+      logging.info(f"store vector with size : %s , points : %s", len(vector), points)
+      #self.client.upsert(
+      #  collection_name=self.collection,
+      #  points= [ points ]
+      #)
     
     def search(self, query_vector: list):
         # Search for similar vectors

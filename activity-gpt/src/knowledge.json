@@ -1,0 +1,14 @@
+{
+    "GET__auth_login": {
+        "question": "mermaid sequence diagram for api request\nGET /auth/login",
+        "context": "harbor shows user the login page for authentication\n\n here is the sequence diagram for the activity\n```mermaid\nsequenceDiagram\n\tparticipant user\n\tparticipant harbor ui\n\tparticipant auth\n\tuser ->> harbor ui: user requests login page and input credentials\n\tharbor ui ->> auth: harbor ui sends request to auth\n\tauth ->> harbor ui: auth sends response to harbor ui\n```"
+    },
+    "POST__api_idm_v1_local_authorize_ui_login": {
+        "question": "mermaid sequence diagram for api request\nPOST /api/idm/v1/local/authorize/ui/login",
+        "context": "login from web ui\n\n here is the sequence diagram for the activity\n```mermaid\nsequenceDiagram\n\tparticipant user\n\tparticipant ui\n\tparticipant local-auth\n\tparticipant oauth\n\tuser ->> ui: user provides credentials\n\tui ->> local-auth: ui sends credentials to local auth\n\tlocal-auth ->> oauth: local auth validates credentials\n\toauth ->> ui: oauth sends response to ui\n\tui ->> user: ui sends response to user\n```"
+    },
+    "GET__idm_api_v1_im_tenants_id_roles": {
+        "question": "mermaid sequence diagram for api request\nGET /idm/api/v1/im/tenants/.*/roles",
+        "context": "fetches roles from IDM\n\n here is the sequence diagram for the activity\n```mermaid\nsequenceDiagram\n\tparticipant user\n\tparticipant idm\n\tuser ->> idm: user requests roles\n\tidm ->> user: idm sends roles\n```"
+    }
+}

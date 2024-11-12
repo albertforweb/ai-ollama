@@ -1,0 +1,103 @@
+[
+  {
+    "request": {
+      "path": "/auth/login",
+      "method": "GET"
+    },
+    "response": {
+      "status": 200
+    },
+    "activity_participants": [
+      "user",
+      "harbor ui",
+      "auth"
+    ],
+    "activity_description": "harbor shows user the login page for authentication",
+    "activity_sequence": [
+      {
+        "start": "user",
+        "finish": "harbor ui",
+        "activity": "user requests login page and input credentials"
+      },
+      {
+        "start": "harbor ui",
+        "finish": "auth",
+        "activity": "harbor ui sends request to auth"
+      },
+      {
+        "start": "auth",
+        "finish": "harbor ui",
+        "activity": "auth sends response to harbor ui"
+      }
+    ]
+  },
+  {
+    "request": {
+      "path": "/api/idm/v1/local/authorize/ui/login",
+      "method": "POST"
+    },
+    "response": {
+      "status": 200
+    },
+    "activity_participants": [
+      "user",
+      "ui",
+      "local-auth",
+      "oauth"
+    ],
+    "activity_description": "login from web ui",
+    "activity_sequence": [
+      {
+        "start": "user",
+        "finish": "ui",
+        "activity": "user provides credentials"
+      },
+      {
+        "start": "ui",
+        "finish": "local-auth",
+        "activity": "ui sends credentials to local auth"
+      },
+      {
+        "start": "local-auth",
+        "finish": "oauth",
+        "activity": "local auth validates credentials"
+      },
+      {
+        "start": "oauth",
+        "finish": "ui",
+        "activity": "oauth sends response to ui"
+      },
+      {
+        "start": "ui",
+        "finish": "user",
+        "activity": "ui sends response to user"
+      }
+    ]
+  },
+  {
+    "request": {
+      "path": "/idm/api/v1/im/tenants/.*/roles",
+      "method": "GET"
+    },
+    "response": {
+      "status": 200
+    },
+    "activity_participants": [
+      "user",
+      "idm"
+    ],
+    "activity_description": "fetches roles from IDM",
+    "activity_sequence": [
+      {
+        "start": "user",
+        "finish": "idm",
+        "activity": "user requests roles"
+      },
+      {
+        "start": "idm",
+        "finish": "user",
+        "activity": "idm sends roles"
+      }
+    ]
+  }
+]

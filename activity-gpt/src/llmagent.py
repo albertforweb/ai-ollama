@@ -30,7 +30,7 @@ class LLMAgent:
         return response_body
 
     except requests.exceptions.RequestException as e:
-        logging.error(f"Request failed: {e}")
+        logging.error(f"Request failed: {e} , response : {response.text}")
         return "Error occurred while processing the request."
 
   def get_embedding(self, data):
@@ -76,7 +76,7 @@ class LLMAgent:
     return response
     
 
-  def chat(self, data_system, data_user, data_assistant):
+  def chat(self, messages: list):
     # request looks like this:
     # curl https://genai.tesseractcloud.com/v1/chat/completions \
     # -H "Content-Type: application/json" \
@@ -123,30 +123,35 @@ class LLMAgent:
     #   "prompt_logprobs": null
     # }
     
-    message = []
-    if data_system:
-      message.append({
-        "role": "system",
-        "content": data_system
-      })
-    if data_user:
-      message.append({
-        "role": "user",
-        "content": data_user
-      })
-    if data_assistant:
-      message.append({
-        "role": "assistant",
-        "content": data_assistant
-      })
-      
-    response = self.send_request(f"{self.base_uri}/chat/completions", {
+    # message = []
+    # if data_system:
+    #   message.append({
+    #     "role": "system",
+    #     "content": data_system
+    #   })
+    
+    # if data_assistant:
+    #   message.append({
+    #     "role": "assistant",
+    #     "content": data_assistant
+    #   })
+    
+    # if data_user:
+    #   message.append({
+    #     "role": "user",
+    #     "content": data_user
+    #   })
+    
+    endpoint = f"{self.base_uri}/chat/completions"
+    body = {
       "model": self.chat_model,
-      "messages": message,
+      "messages": messages,
       "max_tokens": self.max_gen_len,
       "temperature": self.temperature,
       "top_p": self.top_p,
-    })
-    
+    }
+    logging.info(f"Requesting chat from {endpoint} for data : %s", json.dumps(body))
+    response = self.send_request(endpoint, body)
+    logging.info(f"Chat response : %s", json.dumps(response))
     return response
     
